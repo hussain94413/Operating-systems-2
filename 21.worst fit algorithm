@@ -1,0 +1,40 @@
+#include <stdio.h>
+#define MAX_REQUESTS 10
+#define MEMORY_SIZE 100
+void worstFit(int blockSizes[], int m, int requestSizes[], int n) {
+    int allocation[MAX_REQUESTS];
+    for (int i = 0; i < n; i++) {
+        allocation[i] = -1;
+    }
+    for (int i = 0; i < n; i++) {
+        int worstFitIdx = -1;
+        for (int j = 0; j < m; j++) {
+            if (blockSizes[j] >= requestSizes[i]) {
+                if (worstFitIdx == -1 || blockSizes[j] > blockSizes[worstFitIdx]) {
+                    worstFitIdx = j;
+                }
+            }
+        }
+        if (worstFitIdx != -1) {
+            allocation[i] = worstFitIdx;
+            blockSizes[worstFitIdx] -= requestSizes[i];
+        }
+    }
+    printf("\nMemory Allocation:\n");
+    for (int i = 0; i < n; i++) {
+        if (allocation[i] != -1) {
+            printf("Request %d allocated to Block %d\n", i + 1, allocation[i] + 1);
+        } else {
+            printf("Request %d could not be allocated\n", i + 1);
+        }
+    }
+}
+
+int main() {
+    int blockSizes[] = {20, 10, 30, 15, 25};
+    int requestSizes[] = {10, 20, 15, 30, 5};
+    int m = sizeof(blockSizes) / sizeof(blockSizes[0]);
+    int n = sizeof(requestSizes) / sizeof(requestSizes[0]);
+    worstFit(blockSizes, m, requestSizes, n);
+	return 0;
+}
